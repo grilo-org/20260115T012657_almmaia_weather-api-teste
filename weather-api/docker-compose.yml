@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  meu-banco:
+    image: postgres:15-alpine
+    container_name: weather-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=minhasenha
+      - POSTGRES_DB=weatherdb
+    ports:
+      - "5432:5432"
+
+  minha-api:
+    build: .
+    container_name: weather-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - meu-banco
+    environment:
+      
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://meu-banco:5432/weatherdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=minhasenha
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - WEATHER_API_KEY=5f3cbe4cce3ff56e0d78c685547c827b
